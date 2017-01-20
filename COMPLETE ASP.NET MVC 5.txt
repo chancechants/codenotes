@@ -96,7 +96,7 @@ Convention Based Routing
 
 Order matters with routes, define most specific to most generic
 
-mvcaction4 snipped to quicly create an action
+mvcaction4 snipped to quickly create an action
 
 Example of regex to handle routes:
 
@@ -144,5 +144,115 @@ ViewModels
 A viewModel is a model specifically build for a view (sometimes cross-domain like Movies and Customers who have rented a movie)
 Include data  and rules specific to that view
 
+Partial Views
+-------------
+
+CTRL-M-M to collapse/expand sections
+@RenderBody() What we place in our views is rendered here
+_partials start with _ naming convention
+
+Right click Views -> Add -> View -> Check Partial
+
+@Html.Partial("_NavBar") // loads your partial, second param can be a model you pass to it
+
+Working With Data
+-----------------
+
+Entity Framework is an ORM, used to connect to DBs
+
+Objects -> ORM -> Relational Data
+
+Higher 
+DbContext = gateway to our database
+DbSet = tables
+LINQ -> DbSet -> SQL -> DB
+CRUD -> DbSet -> SQL -> DB
+
+DB First vs Code First
+
+DBFirst
+Domain Classes <- Entity Framework <- Database
+CodeFirst
+Domain Classes -> Entity Framework -> Database
+
+CodeFirst for the win
+
+Code-First Migrations
+---------------------
+Tools -> Nuget package manager -> Console
+enable-migrations
+Creates Migrations folder
+add-migration InitialModel
+New cs class is created in Migrations
+Part of ASP.NET identity [adds IdentityModels.cs]
+After you add new props/fields you can reload with: add-migration InitialModel -force
+Click yes to reload
+update-database creates App_Data [click show all files]
+aspnet-xxyyzz.mdf will show the db structure
+Dont mess with __MigrationHistory table
+
+Changing the Model
+------------------
+
+Aim for small migrations
+
+Add prop:
+public bool IsSubscribedToNewsLetter { get; set; }
+add-migration IsSubscribedToCustomer
+update-database 
+Incremental history
+In EF every entity must have a key (usually called id or something with id)
+EF recognizes foreign keys using ClassNameId convention
+public byte MemberShipTypeId { get; set; } 
+
+For each class and smallish set of props / model changes
+add-migration ClassOrPropNames
+update-database
+
+Seeding the Database
+--------------------
+
+In code first you dont create tables and insert records, data is only added by migration
+
+add-migration [nameofdbchanges]
+it will open a cs file
+Sql("INSERT INTO MembershipTypes (Id, DurationInMonths, DiscountRate) VALUES (1, 0, 0, 0");
+then run update-database
+boom records inserted
+
+Overriding Conventions
+----------------------
+
+Sets DB data types
+
+using System.ComponentModel.DataAnnotations;
+
+	[Required]
+        [StringLength(255)]
+        public string Name { get; set; }
+
+Fluent API
+
+Querying Objects
+----------------
+
+CustomersController
+         private ApplicationDbContext _context;
+
+         public CustomersController()
+         {
+             _context = new ApplicationDbContext();
+         }
+
+         protected override void Dispose(bool disposing)
+         {
+             _context.Dispose();
+         }
+
+ViewResult
+var customers = _context.Customers;
+
+ActionResult
+var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
 
 
