@@ -1,0 +1,70 @@
+
+Unit Testing AngularJS
+----------------------
+
+mkdir project
+cd project
+npm init
+npm install bower --save-dev
+mkdir app
+cd app
+bower init
+bower install angular --save
+touch index.html
+mkdir js
+touch js/app.js
+npm install karma-cli phantomjs -g
+cd ..
+npm install karma jasmine --save-dev
+karma --version
+phantomjs --version
+cd app
+bower install angular-mocks --save
+cd js
+mkdir test
+cd test
+mkdir unit
+karma init
+	jasmine > no > PhantomJS > > > yes
+[edit karma.conf.js and add:]
+      '../../bower_components/angular/angular.js',
+      '../../bower_components/angular-mocks/angular-mocks.js',
+      '../app.js',
+      'unit/*.js'
+[to files: [array]]
+karma start karma.conf.js
+npm install karma-ng-html2js-preprocessor --save-dev
+
+Exclude specific tests with xit() and xdescribe()
+Run specific tests with fit() and fdescribe()
+
+Test coverage is a tool for checking which parts of your app are untested
+It is not a way of determining the quality of your unit tests
+100% test coverage is not perfect
+
+Function coverage
+Branch coverage [if/else]
+Line/statement coverage
+
+npm install karma-coverage --save-dev
+
+app/js/test/unit/testingAngularUnitSpec.js
+describe('Testing AngularJS Test Suite', function() {
+  describe('Testing AngularJS Controller', function(){
+
+    it('should initialize the in the scope', function() {
+      module('testingAngularApp');
+      
+      var scope = {};
+      var ctrl;
+      
+      inject(function($controller) {
+        ctrl = $controller('testingAngularCtrl', {$scope:scope});
+        
+        expect(scope.title).toBeDefined();
+        expect(scope.title).toBe("Testing AngularJS Applications");
+      });
+    });
+  });
+});
+

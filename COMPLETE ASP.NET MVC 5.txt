@@ -1,0 +1,148 @@
+COMPLETE ASP.NET MVC 5
+======================
+
+Model = app data and behavior in therms of its problem domain and independent of the ui
+View = html
+Controller = responsible for handling HTTP requests [vidly.com/movies]
+Router = select the right controller for the route
+
+
+MVC = separation of concerns
+
+Domain Model
+	Movie
+	Customer
+	Rental
+	Transaction
+
+POCOs (plain old CLR objects)
+
+RouteConfig.cs
+/movies/popular
+	MoviesController
+	Popular()
+
+/movies/edit/1
+	MoviesController
+	Edit(int id)
+
+FILE -> NEW -> PROJECT -> ASP.NET Web Application (.NET Framework)
+
+Models -> Add Class -> Movie
+	public int Id { get; set; }
+	public string Name { get; set; }
+
+Controllers -> Add Controller -> MoviesController
+	var movie = new Movie() { Name = "Shrek!" };
+	return View(movie);
+
+Views -> Movies -> Add View
+	Random
+	Layout: ~/Views/Shared/_Layout.cshtml
+
+Random.cshtml
+@model Vidly.Models.Movie
+
+<h2>@Model.Name</h2>
+
+-----
+
+CTRL-SHIFT-B Rebuild, then refresh
+
+Action Results
+--------------
+	Type					Helper Method
+	ViewResult				View()
+	PartialViewResult		PartialView()
+	ContentResult			Content()
+	RedirectResult			Redirect()
+	RedirectToRouteResult	RedirectToAction()
+	JsonResult				Json()
+	FileResult				File()
+	HttpNotFoundResult		HttpNotFound()
+	EmptyResult
+
+return Content("Hello World");
+return HttpNotFound();
+return EmptyResult();
+return RedirectToAction("Index", "Home", new { page = 1, sortBy = "name"});
+
+Action Parameters
+-----------------
+	Inputs for actions
+	Request -> MVC Framework -> Action
+	In the URL [/movies/edit/1]
+	In the query string [/movies/edit?id=1]
+	In the form data [id=1]
+        public ActionResult Edit(int id)
+        {
+            return Content("id=" + id);
+        }
+
+with int parameters use ? to make it nullable
+        public ActionResult Index(int? pageIndex, string sortBy)
+        {
+            if (!pageIndex.HasValue)
+                pageIndex = 1;
+
+            if (String.IsNullOrWhiteSpace(sortBy))
+                sortBy = "Name";
+
+            return Content(String.Format("pageIndex={0}&sortBy={1}", pageIndex, sortBy));
+        }
+
+Convention Based Routing
+------------------------
+
+Order matters with routes, define most specific to most generic
+
+mvcaction4 snipped to quicly create an action
+
+Example of regex to handle routes:
+
+            routes.MapRoute(
+                "MoviesByReleaseDate",
+                "movies/released/{year}/{month}",
+                new {controller = "Movies", action = "ByReleaseDate"},
+                new {year = @"\d{4}", month = @"\d{2}"});
+
+Attribute Routing
+-----------------
+
+That MapRoute above is old way of doing it, new way is above the method in the controller:
+
+[Route("movies/released/{year:regex(\\d{4})/{month:regex(\\d{2}):range(1, 12)}")]
+public ActionResult ByReleaseDate(int year, int month)
+
+Constraints:
+	min
+	max
+	minlength
+	maxlength
+	int
+	float
+	guid
+
+Attribute Route Contraints
+
+Passing Data to the Views
+-------------------------
+
+ViewData["RandomMovie"] = movie;
+ViewBag.RandomMovie = movie;
+
+Dont use ViewData or ViewBag, use @model @Model
+
+var viewResult = new ViewResult();
+viewResult.ViewData.Model
+ViewDataDictionary
+Use it like a dictionary
+
+ViewModels
+----------
+
+A viewModel is a model specifically build for a view (sometimes cross-domain like Movies and Customers who have rented a movie)
+Include data  and rules specific to that view
+
+
+

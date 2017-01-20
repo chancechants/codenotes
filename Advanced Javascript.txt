@@ -1,0 +1,223 @@
+﻿Advanced Javascript
+The “What you need to know” Parts
+Scope, Closures
+Nested Scope
+Hoisting
+This
+Closure
+
+
+Interpreted languages go top to bottom [when its on line 3 has no idea what line 4 is]
+Compiled language’s compiler does an initial pass through of the code
+
+
+Smallest atomic unit of scope in the language we [currently] have is the function
+
+
+var foo = “bar”;
+Grammatically this looks like a single statement but really to the JS engine its 3 disparate pieces occurring in different places.
+
+
+function bar() {
+	var foo = “baz”;
+}
+I see a function initiator with an identifier bar
+Registers declaration to scope
+
+
+JIT checks that bar() isn’t used anywhere so we will defer the compilation
+
+
+C++ knows exactly how you are using a function (it has the inputs and the outputs)
+JS guesses and monitors how it will be used and how it compiles
+
+
+Engine is looking through bar for declarations finds foo and 
+
+
+function baz(foo) {
+	foo = “bam”;
+bam = “yay”;
+}
+Scope of baz I have a declaration for a variable foo and I need to register him there
+
+
+Var foo doesnt exist during execution (that was handled in compilation)
+Declarations are handled at compilation
+If you had 100 var foo = ‘bar’; it only runs on the first
+
+
+var foo = “bar”
+Foo is a LHS (left hand reference [target])
+“Bar” is RHS (right hand reference [source value])
+
+
+Hey global I have LHS reference for a variable called foo
+Yes I’ve heard of him because you’ve declared him a few microseconds ago
+[lookup]
+
+
+Function declaration is more accurate than function definition
+
+
+We’re inside of the scope of bar
+var foo = “baz”; Assignment operation
+
+
+You ask your local scope first before going elsewhere
+
+
+Hey scope of baz do you have a LHS for for?
+Yes I have a local variable reference to 
+Hey scope of baz can you have a reference to bam? No. Go Fish.
+Its goes out one level of scope (global in this case) to fish
+Hey global scope do you have a bam reference? I just made a global ref for you because its a LHS
+Had we been in strict mode, would have not made one [error condition]
+
+
+Undeclared variable we were unable to find a proper LHS reference in any of the scopes we have access to.
+
+
+Undeclared != undefined
+
+
+Undefined is really more uninitialized [a weird blank type value]
+Undeclared means has not been defined anywhere
+
+
+Hey global scope I have a function 
+Hey global scope I have a LHS reference
+Hey scope of bar I have an LHS reference for a variable called foo have you ever heard of him?
+Yep I have, here’s a local scope reference to him
+If I find him in the local scope there I will always use that [shadowing]
+
+
+Hey scope of bar I have an RHS reference for function baz have you heard of him?
+Yes I have he was just declared, his value is a function
+Hey scope of baz I have a LHS reference for variable foo have you heard of him
+Hey scope of baz, I have a LHS reference for variable bam have you heard of him?
+No check scope of bar, nope check global, I’ll make it for you [except when its a function]
+Expression Function
+Var x = function bar() {
+
+
+}
+
+
+Anonymous functions dont play well with debugging, 
+Named > anonymous function expressions 
+The name shows up in stack traces
+
+
+Lexical scope vs dynamic scope
+Bash and Perl [option] has dynamic scope
+Lexical scope means compile time scope
+
+
+Cheating lexical scope: Eval
+eval(str); treats it as code
+Slows code down
+Suggestion: never ever use eval statement
+setTimeout with function reference is cool, but dont use the string version since it evals
+
+
+With keyword creates auto-globals
+Var obj = {
+	A: 2,
+	B: 3,
+	C: 4
+};
+
+
+With (obj) {
+	D: 3; // undefined creates auto global
+}
+
+
+With keyword usage is off limits in strict mode
+
+
+function() // function declaration
+(function(){})(); // function expression IIFE immediately invoked function expression
+
+
+Let keyword good for for loops [i only exists within the curly braces]
+Block scoping
+Try catch block scope
+
+
+LHS stuff is happening at compile time RHS stuff is happening at execution
+A;
+B;
+Var a = b;
+Var b = 2;
+B; //2 
+A; // ?
+
+
+Recursion is when a function calls itself
+Mutual recursion when 2 functions call each other
+
+
+Hoisting = order of declaration
+
+
+C header files are manual hoisting (puts declarations at the top for compile)
+JavaScript does it automatically
+Lets dont hoist
+
+
+Put everything in a .js file into an IIFE and its private
+
+THIS KEYWORD
+------------
+
+Every function while executing, has a reference to its current execution context called this.
+Find the call sight and ask these 4 rules:
+	Default binding rule   	foo(); // "bar1" even true with IIFE -- catch all rule
+	Implicit binding rule 	o2.foo(); // "bar2"  o3.foo(); // "bar3"
+
+
+
+function foo() {
+	console.log(this.bar);
+}
+
+var bar = "bar1";
+var o2 = { bar: "bar2", foo: foo };
+var o3 = { bar: "bar3", foo: foo };
+
+foo(); // "bar1"
+o2.foo(); // "bar2"
+o3.foo(); // "bar3"
+
+Lexical scope like elevator or stairs
+
+Window is Global object in node
+
+THIS: Binding Confusion
+-----------------------
+function foo() {
+	var bar = "bar";
+	baz();
+}
+function baz() {
+	console.log(this.bar);
+}
+
+var bar = "bar2";
+foo();
+
+the confused solution:
+	function foo() {
+		var bar = "bar1";
+		this.baz = baz;
+		this.baz();
+	}
+	function baz() {
+		console.log(this.bar);
+	}
+
+	var bar = "bar2";
+	foo();
+

@@ -1,0 +1,762 @@
+-------------------------
+C# Fundamentals
+-------------------------
+
+https://www.udemy.com/csharp-tutorial-for-beginners
+programmingwithmosh.com
+
+C# vs .NET
+CLR (Common Language Run-time)
+Architecture of .NET Applications
+Our first C# App
+
+C# is a programming language
+.NET is a framework for building applications on windows 
+
+.NET
+	CLR (Common Language Runtime)
+	Class Library
+
+CLR is Intermediate Language independent of OS
+	Provides
+		Just in time (JIT) compilation of intermediate language code to native machine code at runtime
+		Code in windows run in Linux
+
+Classes are building blocks
+	Container that has some data/attributions and functions/methods
+	Methods handle behavior, data has state
+
+Car (class)
+	Data
+		Make 
+		Model
+		Color
+	Methods
+		Start()
+		Move()
+
+Namespace is a container for related classes
+	Databases
+	Security
+	Graphics, etc.
+
+Assemby (DLL or EXE)
+	Container of namespaces [a single unit of deployment of .net apps]
+
+An assembly is a file (DLL or EXE) that contains one or more namespaces and classes. An EXE file represents a program that can be executed. A DLL is a file that includes code that can be re-used across different programs.
+
+Using statements
+	They give you access to classes in other namespaces [Collections, DB, text, multithreading, etc.]
+
+Basic structure of Program.cs
+-----------------------------
+
+using System;
+
+namespace [yourname]
+{
+	class Program 
+	{
+		static void Main(string[] args)
+		{
+			Console
+		}
+	}
+}
+
+-----------------------------
+void is the return type (return nothing)
+
+PRIMITIVE TYPES
+---------------
+variables and constants
+data types type conversion
+scope and overflowing
+operators
+
+Variable: a name given to a storage location in memory
+Constant: an immutable value [Pi=3.14]
+
+Declaring Variables/Constants
+type then identifier [case sensitive] then semi-color: 
+	int number;
+	int Number = 1;
+	const float Pi = 3.13f;
+
+You can't use a var without initializing it
+You declare a const without setting it's value
+
+Identifiers
+	cannot start with a number
+	cannot include whitespace
+	cannot be a reserved keyword [prefix with @ if needed]
+	use meaningful name
+
+Naming Conventions
+	Camel Case firstName
+	Pascal Case FirstName
+	Hungarian Notation strFirstName
+
+For local vars: camel int myNumber;
+for constants: pascal case const int MaxZoom = 5;
+
+Integral Numbers
+	C#		.NET 	Bytes	Range
+	byte 	Byte 	1		0 to 255
+	short	Int16	2		-32768 - 32767
+	int 	Int32	4		-2.1B to 2.1B
+	long	Int64	8		...
+Real Numbers
+	C#		.NET 	Bytes	Range
+	float	Single	4		-3.4 x 10^38 to 3.4 x 10^38
+	double	Double	16		...
+	decimal	Decimal	16		-7.9 x 10^28 to 7.9 x 10^28
+Chracter
+	char 	Char 	2		Unicode characters
+Boolean
+	bool	Boolean	1		True/False
+
+C# keywords are always lowercase
+http://msdn.microsoft.com/en-us/library/cs7y5x0x(v=vs.90).aspx
+
+float number = 1.2f; // add f for floats without f it would use double
+decimal number = 1.2m; //  add m for decimals
+
+Non-primitive Types
+	String
+	Array
+	Enum
+	Class
+
+Overflowing
+-----------
+byte number = 255;
+number = number + 1; // 0
+Exceeding the boundary of the data type
+
+checked  // not used often at all
+{
+	byte number = 255;
+	number = number + 1;
+}
+Exception will be thrown
+
+Scope
+-----
+{
+	byte a = 1;
+
+	{
+		byte b = 2;
+		{
+			byte c = 3;
+		}
+	}
+}
+
+a is accessible to itself and child blocks
+strings are not primitive types
+declare chars with ''
+declare strings with ""
+
+cw[tab] autocompletes to Console.WriteLine();
+
+var is optional will show you .NET datatype on hover
+
+Console.WriteLine("{0} {1}", byte.MinValue, byte.MaxValue); // 0 255
+
+Type Conversion
+---------------
+Implicit [compiler wont allow data loss]
+Explicit (casting) [will allow data loss, means you know about it]
+Compatible Types
+
+byte b = 1; // 00000001
+int i = b;  // 00000000 00000000 00000000 00000001
+
+float f = 1.0f;
+int i = (int)f; // cast with ()
+
+string s = "1"
+int i = (int)s; // wont compile - incompatible
+int i = Convert.ToInt32(s);
+int j = int.Parse(s);
+
+var a = 10;
+var b = 3;
+Console.WriteLine((float)a / (float)b); // 3.33333
+
+8 bits = 1 byte
+
+Convert
+	ToByte()
+	ToInt16()
+	ToInt32()
+	ToInt64()
+
+int i = 1000;
+byte b = (byte) i;
+Console.WriteLine(b); // 232 bits lost explicitly
+
+Try Catch for friendly errors that dont break in runtime:
+            try
+            {
+                var num = "1234";
+                int i = Convert.ToByte(num);
+                Console.WriteLine(i);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("The number could not be converted to a byte.");
+            }
+
+string str = "true";
+bool b = Convert.ToBoolean(str);
+Console.WriteLine(b); // True, successfully converted
+
+C# Operators
+============
+Athrimetric	a++ a-- ++a --a [postfix prefix]
+Comparison == != > >= < <=
+Assignment = += -= *= /=
+Logical && || !
+Bitwise & |
+
+Add +
+Subtract -
+Multiply *
+Divide /
+Remainder %
+
+var z = true && false; // false
+var z = true || false; // true
+
+CLASSES
+=======
+
+Class
+	Person
+		Fields
+			Name
+			Age
+			Height
+			Weight
+		Methods
+			Walk()
+			Talk()
+			Eat()
+			Sleep()
+
+Objects and classes are used interchangeably
+
+public class Person // public is the access modifier [accessible anywhere]
+{
+	public string Name;
+
+	public void Introduce()
+	{
+		Console.WriteLine("Hi, my name is " + Name);
+	}
+}
+
+public class Calculator
+{
+	public static int Add(int a, int b)
+	{
+		return a + b;
+	}
+}
+
+Person person = new Person(); // memory allocation with new keyword, clr has garbage collection will deallocate memory for you
+
+var person new Person;
+person.Name = "Aaron";
+person.Introduce();
+
+static will put a method at one place in memory [use static modifier for singletons where you want one memory allocation]
+static is good for currentDate
+static is for when you dont want it to create an object and keep it simple (just use the method, no need to instantiate it)
+
+field or method with static will be accessible from the class itself
+
+ALT-ENTER with resharper to shortcut moving classes to new files, instantiating with var, and auto-adding using namespace.class
+CTRL-TAB to switch files
+CTRL-D copies line
+CTRL-X deletes line
+
+STRUCTS
+=======
+
+Similar to classes, combine related fields and methods together [99% of the time you will use classes instead of structs]
+
+public struct RgbColor
+{
+	public int Red;
+	public int Green;
+	public int Blue;
+}
+
+ARRAYS
+======
+
+int[] numbers = new int[3]; // needs to be allocated so uses new keyword
+   declare an array    size [fixed size and it cannot be changed]
+
+Array is an object internally
+
+numbers[0] = 1;
+numbers[1] = 2;
+numbers[2] = 3;
+
+shorter:
+int[] numbers = new int[3] { 1,2,3 };
+
+arrays init to default value (0, false etc)
+
+STRINGS
+=======
+
+String Literal
+string firstName = "Aaron";
+
+String Concatenation
+string name = firstName + " " + lastName;
+
+String Format
+string name = string.Format("{0} {1}", firstName, lastName);
+			  string = .net framework string class
+			  		 Format = static method
+			  		 		Format string 
+			  		 		 Placeholders
+			  		 		 		   Placeholder 1
+			  		 		 		   			  Placeholder2
+
+var numbers = new int [3] {1,2,3};
+string list string.Join(",", numbers);
+
+Strings are immutable [once you create them you cannot change them]
+
+string name = "Aaron";
+char firstChar = name[0]; // A
+name[0] = 'a'; // wont compile
+
+Escape Chars
+\n
+\t
+\\
+\'
+\"
+
+Verbatim Strings
+string path = "c:\\projects\\project1\\folder1";
+string path = @"c:\projects\project1\folder1";
+
+            var text = "Hi Aaron\nLook into the following paths\nc:\\folder1\\folder2\nc:\\folder3\\folder4";
+            var text2 = @"Hi Aaron
+Look into the following paths
+c:\folder1\folder2
+c:\folder3\folder4";
+
+Blank string check: String.IsNullOrWhiteSpace(input)
+
+ENUMS
+=====
+Number of related constants
+public enum ShippingMethod : byte
+{
+	RegularAirMail = 1,
+	RegisteredAirMail = 2,
+	Express = 3;
+}
+
+var method = ShippingMethod.Express;
+
+Parse a string to an enum
+            var shippingMethod = (ShippingMethod)Enum.Parse(typeof(ShippingMethod), methodName);
+
+TYPES
+=====
+int
+char
+float
+bool
+classes
+structures
+arrays (System.Array)
+strings (System.String)
+
+Structures (no more than 8 bytes)
+	Primitive Types
+	Custom structures
+Classes
+	Arrays
+	Strings
+	Custom classes
+
+Structures = Value Types
+	Allocated on stack
+	Memory allocation done automatically
+	Immediately removed when out of scope
+Classes = Reference Types
+	You need to allocate memory (new keyword)
+	Memory allocated on heap (more sustainable)
+	Wont be removed from memory immediately (until garbage collection by CLR)
+
+var anotherObject = someObject;
+
+integers are value types
+when you copy a Value types to a different var their values are copied
+
+stack
+	a
+	10
+
+	b [new location in memory, completely independent]
+	10
+
+var array2 = array1; [changes to array2 or array1 changes reference to both]
+stack		heap
+array1 >	0x00416A
+			1,2,3
+array2 >	0x00416A
+
+By Value vs By Reference
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var number = 1;
+            Increment(number);
+            Console.WriteLine(number); // 1  DOES NOT INCREMENT because its a value type, two different locations in memory
+
+            var person = new Person() { Age = 20 };
+            MakeOld(person);
+            Console.WriteLine(person.Age); // 30 DOES INCREMENT because its a reference type and is using the same memory location
+        }
+
+        public static void Increment(int number)
+        {
+            number += 10;
+        }
+
+        public static void MakeOld(Person person)
+        {
+            person.Age += 10;
+        }
+    }
+
+Conditional Statements
+======================
+
+if / else
+switch /case
+a?b:c
+
+if (condition)
+	someStatement
+else if (anotherCondition)
+	anotherStatement
+else 
+	yetAnotherStatement
+
+switch(role)
+{
+	case Role.Admin:
+		...
+		break;
+	case Role.Moderator:
+		...
+		break;
+	default:
+		...
+		break;
+}
+
+Good quick way of converting Console.ReadLine to int:
+	var speedLimit = Convert.ToInt32(Console.ReadLine());
+Determining if int
+            var EnteredNumber = Console.ReadLine(); // string
+            int num;
+            bool IsEnteredNumberValid = Int32.TryParse(EnteredNumber, out num);
+
+ITERATIONS
+==========
+
+for (var i = 0; i < 10; i++)
+{
+	...
+}
+
+var i = 0 [initialization clause]
+i < 10 [condition clause]
+i++ [iteration clause]
+
+foreach (var number in numbers) // for lists or arrays, number is the local 
+{
+	...
+}
+
+while (i < 10)
+{
+	...
+	i++;
+}
+
+do
+{
+	...
+	i++;
+} while (i < 10);
+// executes at least once
+
+break: jumps out of the loop
+continue: jumps to next iteration
+
+Generally better to use while when you do not know number of iterations
+
+Random Numbers:
+	var random = new Random();
+	var x = random.Next(0,10);
+
+Random Letters:
+	var random = new Random();
+	var x = random.Next(0,26));
+
+MULTIDIMENSIONAL ARRAYS
+=======================
+var numbers = new int[5];
+var numbers = new int[5]{ 1,2,3,4,5 };
+
+
+Rectangular (3x5)
+01234
+01234
+01234
+
+Jagged
+0123
+01234
+012
+
+CLR is optimized to single dimensional array (Jagged)
+
+Rectangular 2D
+var matrix = new int[3,5];
+var matrix = new int[3,5]
+{
+	{ 1,2,3,4,5 },
+	{ 6,7,8,9,10 },
+	{ 11,12,13,14,15 }
+};
+var element = matrix[0,0]; // specify index of row and column
+
+Rectangular 3D
+var colors = new int[3,5,4];
+
+Jagged [array of arrays]
+var array = new int[3][]; // top level
+array[0] = new int[4];
+array[1] = new int[5];
+array[2] = new int[3];
+array[0][0] = 1;
+
+Jagged: var array = new int[3][];
+Rectangular: var array = new int[3,5];
+
+Array type is a class with properties and methods (static methods)
+	Length (instance methods)
+	Clear() (static)
+	Copy() (static)
+	IndexOf() (static)
+	Reverse() (static)
+	Sort() (static)
+
+Static members = accessible via class vs object
+	Array.Clear()
+	numbers.Clear() <- doesnt exist
+
+LISTS
+=====
+Like arrays but when you dont know how objects/elements/fields
+
+var numbers = new List<int>();
+var names = new List<string>();
+
+var numbers = new List<int>() { 1,2,3,4 };
+
+Useful methods:
+	Add()
+	AddRange()
+	Remove()
+	RemoveAt()
+	IndexOf()
+	Contains()
+	Count
+
+Intellisense: IEnumerable (whenever you see a type prefixed with I it's an interface)
+We're not allowed to modify our collection inside a foreach loop
+
+
+DATETIMES
+=========
+DateTimes vars are immutable *cant change em
+
+            var dateTime = new DateTime(2017, 1, 14);
+            var now = DateTime.Now;
+            var today = DateTime.Today;
+
+            Console.WriteLine("Hour: " + now.Hour);
+            Console.WriteLine("Minute: " + now.Minute);
+
+            var tomorrow = now.AddDays(1);
+            var yesterday = now.AddDays(-1);
+
+            Console.WriteLine(now.ToLongDateString());
+            Console.WriteLine(now.ToShortDateString());
+            Console.WriteLine(now.ToLongTimeString());
+            Console.WriteLine(now.ToShortTimeString());
+            Console.WriteLine(now.ToString("d"));
+
+Timespan
+========
+// Creating
+var timeSpan = new TimeSpan(1,2,3); 
+var timeSpan1 = new TimeSpan(1,0,0);
+TimeSpan.FromHours(1);
+var start = DateTime.Now;
+var end = DateTime.Now.AddMinutes(2);
+var duration = end - start; // 2.0001
+
+// Properties
+timeSpan.Minutes // 2
+timeSpan.TotalMinutes // 62.05
+
+// Add
+timeSpan.Add(TimeSpan.FromMinutes(8)));  
+
+// Subtract
+timeSpan.Subtract(TimeSpan.FromMinutes(2))); 
+
+// ToString
+timeSpan.ToString()
+
+// Parse
+TimeSpan.Parse("01:02:03")
+
+STRINGS
+=======
+ToLower()
+ToUpper()
+Trim()
+IndexOf('a')
+LastIndexOf("Hello")
+Substring(startIndex)
+Substring(startIndex, length)
+Replace('a', '!')
+Replace("aaron", "Aaron")
+String.IsNullOrEmpty()
+String.IsNullOrWhitespace()
+str.Split(' ');
+string s = "1234";
+int i = int.Parse(s);
+int j = Convert.ToInt32(s); // safer than parse
+
+int i = 1234;
+string s = i.ToString(); // "1234"
+string t = i.ToString("C"); // "$1,234.00"
+string t = i.ToString("C0"); // "$1,234"
+cDdDeEfFxX [currency, dec, exp, fixed, hex]
+
+StringBuilder
+=============
+Mutable string
+Defined in System.Text
+Not optimized for searching (no indexof contains etc)
+Append()
+Insert()
+Remove()
+Replace()
+Clear()
+
+You can chain StringBuilders
+            var builder = new StringBuilder();
+            builder.Append('-', 10)
+                .AppendLine()
+                .Append("Header")
+                .AppendLine()
+                .Append('-', 10)
+                .Replace('-', '+')
+                .Remove(0, 10)
+                .Insert(0, new string('-', 10));
+            Console.WriteLine(builder);
+            Console.WriteLine("First char: " + builder[0]);
+
+Accessible via array eg: builder[0]
+
+PROCEDURAL PROGAMMING
+=====================
+
+function
+method
+routine
+subroutine
+
+Basically separating business logic 
+
+USING FILES
+===========
+
+File (static), FileInfo (instance)
+Create()
+Copy()
+Delete()
+Exists()
+GetAttributes()
+Move()
+ReadAllText()
+
+Directory (static), DirectoryInfo (instance)  
+CreateDirectory()
+Delete()
+Exists()
+GetCurrentDirectory()
+GetFiles()
+Move()
+GetLogicalDrives()
+
+Path
+	GetDirectoryName()
+	GetFileName()
+	GetExtension()
+	GetTempPath()
+
+            //static methods
+            var path = @"C:\somefile.jpg";
+            File.Copy(@"C:\temp\myfile.jpg", @"c:\temp\myfile2.jpg", true);
+            File.Delete(path);
+            if (File.Exists(path))
+            {
+                //
+            }
+            var content = File.ReadAllText(path);
+
+            //instance methods security checking on each operation so slows down, prefer static methods
+            var fileInfo = new FileInfo(path);
+            fileInfo.CopyTo("...", true);
+            fileInfo.Delete();
+            if (fileInfo.Exists)
+            {
+                //
+            }
+
+DEBUGGING
+=========
+F5 Run app in debug mode
+SHIFT-F5 Stop debug mode
+CTRL-F5 run without debug
+F9 Place breakpoint
+F10 Step over [one line at a time]
+F11 Step into 
+SHIFT-F11 Step out 
+

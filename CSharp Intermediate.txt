@@ -1,0 +1,555 @@
+C# Intermediate
+===============
+
+CLASSES
+=======
+Class is a building block of an application
+
+Presentation				PostView
+Business Logic / Domain 	Post
+Data Access / Persistence	PostRepository
+
+Data (represented by fields)
+Behavior (represented by methods/functions)
+
+Person (UML) [Object: John, Mary, Scott]
+Name: string
+Age: byte
+Height: float
+Weight: byte
+--
+Walk()
+Talk()
+Eat()
+Sleep()
+
+Post
+Title: string
+Description: string
+DateTime: DateTime
+Publish()
+Like()
+Comment()
+
+Object is an instance of a class that resides in memory
+
+public class Person
+{
+	.. class members ..
+	public string Name;
+
+	public void Introduce()
+	{
+		Console.WriteLine("Hi my name is " + Name); // you access class members here
+	}
+}
+
+PascalCase for classes
+camelCase for method parameters
+members of a class
+
+Person person = new Person();
+var person = new Person();
+
+Instance: accessible from an object.
+	person.Name = "Aaron";
+	person.Introduce();
+
+Static: accessible from the class.
+	Console.WriteLine() [Console is a class, WriteLine is a static method]
+
+Why use static members:
+	To represent concepts that are a singleton
+	DateTime.Now
+	Console.WriteLine()
+
+Declaring static members:
+public static int PeopleCount = 0;
+
+CONSTRUCTORS
+============
+quick create: ctor [enter]
+A method that is called when an instance of a class is created
+To put an object in an early state [to init fields]
+
+public class Customer
+{
+	public Customer()
+	{
+
+	}
+}
+
+The constructor has the same name as the class and no return type
+
+public class Customer
+{
+	public string Name;
+
+	public Customer(string name)
+	{
+		this.Name = name;
+	}
+}
+
+Constructor Overloading
+-----------------------
+public class Customer
+{
+	public Customer() { .. }
+	public Customer(string name) { .. }
+	public Customer(int id, string name) { .. }
+}
+Parameters types and number of them [makes init easier]
+
+Whenever you have a class and that class has a list of objects, initiliaze them as empty
+
+Object Initializers
+-------------------
+public class Person
+{
+	public int Id;
+	public string FirstName;
+	public lastName;
+	public DateTime birthdate;
+
+	var person = new Person { FirstName = "Aaron", LastName = "Rosario" };
+}
+
+METHODS
+=======
+Signature of methods
+	Name
+	Number and type of params
+	public class Point
+	{
+		public void Move(int x, int y) {}
+	}
+Method Overloading
+	Method with the same name but different signatures
+	public class Point
+	{
+		public void Move(int x, int y) {}
+		public void Move(point newLoc) {}
+		public void Move(Point newLoc, int sped) {}
+	}
+	Use an array for when you have lots of params
+	var result = calculator.Add(new int[]{ 1,2,3,4});
+Params modifier [useful]
+	public class Calculator
+	{
+		public int Add(params int[] numbers){}
+	}
+	var result = calculator.Add(1,2,3,4);
+Ref modifier [smelly]
+	public class MyClass
+	{
+		public void MyMethod(int a)
+		{
+			a += 2;
+		}
+	}
+
+	var a = 1;
+	myClass.MyMethod(a); // 1 -- a [value type]
+	// alternate way to do it..
+	public class Weird
+	{
+		public void DoAWeirdThing(ref int a)
+		{
+			a += 2;
+		}
+	}
+
+	var a = 1;
+	weirdo.DoAWeirdThing(ref a); // 3
+Out modifier [smelly]
+	public class MyClass
+	{
+		public void MyMethod(out int result)
+		{
+			result = 1;
+		}
+	}
+
+	int a;
+	myClass.MyMethod(out a);
+
+FIELDS
+======
+Initialization
+	public class Customer
+	{
+		List<Order> Orders = new List<Order>();
+	}
+Read-only
+	public class Customer
+	{
+		readonly List<Order> Orders = new List<Order>();
+	}
+
+ACCESS MODIFIERS
+================
+To create safety in our programs [like readonly]
+
+Public
+Private
+Protected
+Internal
+Protected Internal
+
+Encapsulation / Information Hiding
+Inheritance
+Polymorphism
+
+Encapsulation
+	Define fields as private
+	Provides getter/setter methods as public
+
+PROPERTIES
+==========
+quick: prop tab enter
+A class member that encapsulates a getter/setter for accessing a field.
+
+public class Person
+{
+	private DateTime _birthDate;
+
+	public DateTime BirthDate 
+	{
+		get { return _birthday; }
+		set { _birthdate = value; }
+	}
+}
+
+Auto-implemented Properties
+
+public class Person
+{
+	public DateTime Birthdate { get; set; } // internally creates a private field and getter and setter methods for us
+}
+
+INDEXERS
+========
+public class HttpCooke
+{
+	public string this[string key]
+	{
+		get { .. }
+		set { .. }
+	}
+}
+
+CLASS COUPLING
+==============
+Favor loose coupling over tight coupling
+Favor composition over inheritance
+
+INHERITANCE
+===========
+Allows one class to inherit code from the other
+Is-A [eg: A Car is a Vehicle]
+Code re-use
+Polymorphic behavior
+
+UML
+PresentationObject [Parent/Base Class (Super Class)]
+	Text [Child/Derived/Sub classes]
+	Table
+	Image
+
+public class PresentationObject
+{
+	// common shared code
+}
+
+public class Text : PresentationObject
+{
+	
+}
+
+COMPOSITION
+===========
+Allows one class to container the other
+Has-A relationship
+Car has an engine
+Code re-use
+Flexibility
+A means to loose-coupling
+
+public class Installer
+{
+	private Logger _logger;
+
+	public Installer(Logger logger)
+	{
+		_logger = logger;
+	}
+}
+
+No syntax simply a private field in the composite class
+
+FAVOR COMPOSITION OVER INHERITANCE
+==================================
+Problems with inheritance
+	Easily abused
+	Large hierarchies
+	Fragility
+	Tightly coupling
+
+Any inheritance relationship can be translated to Composition
+
+With componsition we encapsulate some common functionality and then we compose them together to create new classes
+
+ACCESS MODIFIERS PART 2
+=======================
+Black Box, limiting visibility from the outside
+
+Public = accessible from everywhere [visible from outside]
+Private = accessible only from the class 
+Protected = Accessible only from the class and its derived classes [any classes derived can access and breaks encapsulation]
+Internal = Accessible only from the same assembly 
+Protected Internal = Accessible only from the same assembly or any derived class [weirdo access modifier]
+
+Encapsulation is hiding the details of an implementation
+Not showing the internals because its not relevant/safe/best practice for everyone to be in the internals, I give you a public interface, you use that.
+
+Setting the access modifier to private means that no one else is calling your functions [allowing you to change them without worrying about everything breaking downstream]
+
+Encapsulation = WE DONT WANT ANYWHERE ELSE TO HAVE DEPENDENCIES ON THESE METHODS
+
+With a class library you create a .DLL
+
+CONSTRUCTORS AND INHERITANCE
+============================
+Base class constructors are always executed first
+Base class constructors are not inherited
+
+public class Vehicle
+{
+	private string _registrationNumber;
+
+	public Vehicle(string registrationNumber)
+	{
+		_registrationNumber = registrationNumber;
+	}
+}
+
+public class Car : Vehicle
+{
+	public Car(string registrationNumber)
+		: base (registrationNumber)  // passing in the base classes constructor
+	{
+		_registrationNumber = registrationNumber; // not inherited because registrationNumber is private
+	}
+}
+
+UPCASTING / DOWNCASTING
+=======================
+Conversion from a derived class to a base class (upcast)
+Conversion from a base toa derives
+The as and is keywords
+
+public class Shape
+{
+	
+}
+public class Circle : Shape
+{
+	
+}
+
+Circle circle = new Circle();
+Shape shape = circle;
+
+Circle anotherCircle = (Circle)shape; // explicit cast [downcasting]
+Car car = (Car)shape; // throws cast exception
+
+BOXING AND UNBOXING
+===================
+Value Types
+	Stored on the stack
+	All primitive types: byte int float char bool
+	The struct type
+References Types
+	Stored in the heap (more memory)
+	Longer lifetime
+	Any classes (Object, Array, String, DbMigrator, etc)
+
+METHOD OVERRIDING
+=================
+Modifying the implementation of an inherited method
+
+Changing the implementation of an inherited method
+
+public class Shape
+{
+	public virtual void Draw()
+	{
+		// Default Implementation
+	}
+}	
+
+public class Circle : Shape
+{
+	public override void Draw()
+	{
+		// New Implementation
+	}
+}
+
+public class Image : Shape
+{
+	
+}
+
+ABSTRACT CLASSES AND MEMBERS
+============================
+Abstract modifier
+Indicates that a class or a member is missing implementation
+
+public abstract class Shape
+{
+	public abstract void Draw();
+}
+
+public class Circle : Shape
+{
+	public override void Draw()
+	{
+		// implementation for circle
+	}
+}
+
+Inherently virtual
+Do not include implementation [purely declaration]
+public abstract void Draw();
+
+If a member is declared as abstract, the container class needs to be declared as abstract too.
+
+public abstract class Shape
+{
+	public abstract void Draw();
+}
+
+Derived class
+	Must implement all abstract members in the base abstract class.
+
+Abstract classes cannot be instantiated.
+
+var shape = new Shape(); // wont compile
+
+Why use Abstract?
+	When you want to provide some common behavior, while forcing other developers to follow your design
+
+Forces them to override methods manually
+
+Good for things that are too abstract to instantiate. Say we have circles and rectangles in the derived from shape class, we want to disallow instantiation of "Shape", because we want instantiation of circles, rectangles, etc not the abstract
+You can instantiate FileStream, but not Stream [its too abstract]
+
+SEALED CLASSES AND MEMBERS
+==========================
+Not used very often [can mess up your inheritance]
+Prevents derivation of classes or overriding of methods
+NO OVERRIDE FOR YOU!
+
+public sealed class Circle : Shape
+{
+	public sealed override void Draw()
+	{
+	 	.. drawing a circle;
+	}
+}
+
+Sealed classes are slightly faster because of some run-time optimizations
+[hardly ever used]
+
+INTERFACES
+==========
+A language construct that is similar to a class (in terms of syntax) but is fundamentally different
+
+public interface ITaxCalculator
+{
+	int Calculate();
+}
+
+Starts with I convention [dont not have an implementation or access modifier]
+
+Used to build loosely couple applications 
+
+Lets you change dependencies without affecting dependents
+
+Improves testability
+
+namespace Testability
+{
+    public interface IShippingCalculator
+    {
+        float CalculateShipping(Order order);
+    }
+
+    public class ShippingCalculator : IShippingCalculator
+    {
+        public float CalculateShipping(Order order)
+        {
+            if (order.TotalPrice < 30f)
+                return order.TotalPrice * 0.1f;
+
+            return 0;
+        }
+    }
+}
+
+MS test suite vs Xunit vs Nunit
+To run test CTRL-T-R [resharper] CTRL-R-A [no resharper]
+Or go to Test -> Run -> All test
+
+[TestMethod]
+public void Process_OrderIsNotShipped_ShouldSetTheShipmentPropertyOfTheOrder()
+{
+	var orderProcessor = new OrderProcessor(new FakeShippingCalculator());
+	var order = new Order();
+
+	orderProcessor.Process(order);
+
+	Assert.IsTrue(order.IsShipped);
+	Assert.AreEqual(1, order.Shipment.Cost);
+	Assert.AreEqual(DateTime.Today.AddDays(1), order.Shipment.ShippingDate);
+}
+
+Interfaces and Extensibility
+----------------------------
+Dependency injection: specifying the dependencies in the constructor
+
+public class DbMigrator
+{
+	private readonly ILogger _logger;
+
+	public DbMigrator(ILogger logger)
+	{
+		_logger = logger;
+	}
+}
+
+For filestreams use using statement to auto call .Dispose of the stream just in case
+
+using (var streamWriter = new StreamWriter(_path, true))
+{
+	streamWriter.WriteLine(message);
+}
+
+Being able to switch between console logger and file logger without changing either one using interface ILogger. 
+
+OCP = open close principle, open for extension but closed for modification
+
+Interfaces and Inheritance
+--------------------------
+
+Interfaces have nothing to do with inheritance
+Classes implements an interface, they dont inherit from it
+An interface is simply a contract, any class implementing this interface will also implement these methods
+Interfaces are used for providing polymorphic behavior, testability and loose coupling
+
+
+
+
