@@ -255,4 +255,23 @@ var customers = _context.Customers;
 ActionResult
 var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
 
+These dont execute until we iterate over them in the view.
+
+Eager Loading
+-------------
+This is when you want to load objects attached to an object (MembershipType.DiscountRate when iterating through Customers)
+
+Added to CustomersController.cs: 
+
+using System.Data.Entity;
+var customers = _context.Customers.Include(c => c.MembershipType).ToList();
+
+To include membershiptype discountrate in view:
+
+<td>@customer.MembershipType.DiscountRate%</td>
+
+Shortcut to Package Manager Console
+-----------------------------------
+Tools -> Options -> Environment -> Keyboard: packagemanagerconsole Alt+/,Alt+.
+
 
